@@ -1,0 +1,14 @@
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/bin/Debug/net9.0/SMTP2Graph
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/bin/Debug/net9.0/SMTP2Graph.deps.json
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/bin/Debug/net9.0/SMTP2Graph.runtimeconfig.json
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/bin/Debug/net9.0/SMTP2Graph.dll
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/bin/Debug/net9.0/SMTP2Graph.pdb
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/obj/Debug/net9.0/SMTP2Graph.GeneratedMSBuildEditorConfig.editorconfig
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/obj/Debug/net9.0/SMTP2Graph.AssemblyInfoInputs.cache
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/obj/Debug/net9.0/SMTP2Graph.AssemblyInfo.cs
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/obj/Debug/net9.0/SMTP2Graph.csproj.CoreCompileInputs.cache
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/obj/Debug/net9.0/SMTP2Graph.dll
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/obj/Debug/net9.0/refint/SMTP2Graph.dll
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/obj/Debug/net9.0/SMTP2Graph.pdb
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/obj/Debug/net9.0/SMTP2Graph.genruntimeconfig.cache
+/Users/dylanbickerstaff/Library/CloudStorage/OneDrive-belowaverage/SMTP2Graph/SMTP2Graph/obj/Debug/net9.0/ref/SMTP2Graph.dll
