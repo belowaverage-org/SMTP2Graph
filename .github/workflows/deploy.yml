@@ -1,0 +1,17 @@
+name: Deploy Image
+on:
+  push:
+    branches: [ master ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ghcr.io/krisdb2009/smtp2graph:latest
+    - name: Login
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u krisdb2009 --password-stdin
+    - name: Publish the Docker image
+      run: docker push ghcr.io/krisdb2009/smtp2graph:latest
