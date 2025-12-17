@@ -43,6 +43,16 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Azure.Identity": {
+              "target": "Package",
+              "version": "[1.17.1, )"
+            },
+            "Microsoft.Graph": {
+              "target": "Package",
+              "version": "[5.98.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

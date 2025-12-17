@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SMTP2Graph")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+96344d8f1afbcdce01dc6b09e993e1427fbe5c44")]
 [assembly: System.Reflection.AssemblyProductAttribute("SMTP2Graph")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SMTP2Graph")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
