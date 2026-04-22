@@ -96,7 +96,7 @@ public class Worker(ILogger<Worker> Logger) : BackgroundService
         var sw = new StreamWriter(stream);
         var sr = new StreamReader(stream);
         sw.AutoFlush = true;
-        sw.Write($"220 {Environment.MachineName} SMTP2Graph Service ready\r\n");
+        await sw.WriteAsyncExt($"220 {Environment.MachineName} SMTP2Graph Service ready", Logger, Port);
         while (true)
         {
             string? msg = null;
