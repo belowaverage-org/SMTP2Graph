@@ -7,33 +7,23 @@ using System.Text;
 using Microsoft.Kiota.Abstractions;
 using Microsoft.Win32;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 
 namespace SMTP2Graph;
 
-public static class Service
+public class Worker(ILogger<Worker> Logger) : BackgroundService
 {
-    private readonly static ILoggerFactory LogFactory = LoggerFactory.Create((lf) => {
-        lf.SetMinimumLevel(LogLevel.Trace);
-        lf.AddSimpleConsole((sc) => {
-            sc.SingleLine = true;
-            sc.TimestampFormat = "MM/dd/yyyy: hh:mm:ss: ";
-        });
-        if (OperatingSystem.IsWindows()) lf.AddEventLog();
-    });
+    private readonly string[] GraphScopes = ["https://graph.microsoft.com/.default"];
 
-    private static readonly string[] GraphScopes = ["https://graph.microsoft.com/.default"];
-
-    private static readonly ClientSecretCredentialOptions GraphCredOptions = new() {
+    private readonly ClientSecretCredentialOptions GraphCredOptions = new() {
         AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
     };
 
-    private static GraphServiceClient? GraphClient;
+    private GraphServiceClient? GraphClient;
 
-    private static readonly ILogger Logger = LogFactory.CreateLogger(typeof(Service));
+    private readonly TcpListener MailListener = new(IPAddress.Any, 25);
 
-    private static readonly TcpListener MailListener = new(IPAddress.Any, 25);
-
-    public static void Main()
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         Logger.LogInformation("Initializing SMTP2Graph...");
 
@@ -88,7 +78,7 @@ public static class Service
         }
     }
 
-    private static string GetConfigOption(string Key)
+    private string GetConfigOption(string Key)
     {
         string? env;
         env = Environment.GetEnvironmentVariable(Key);
@@ -100,7 +90,7 @@ public static class Service
         return string.Empty;
     }
 
-    private static async Task HandleConnection(TcpClient client, Stream stream, int Port)
+    private async Task HandleConnection(TcpClient client, Stream stream, int Port)
     {
         string From = string.Empty;
         var sw = new StreamWriter(stream);
@@ -123,7 +113,7 @@ public static class Service
             Logger.LogTrace(Port, "Recieved: {msg}", msg);
             if (msg.StartsWith("HELO") || msg.StartsWith("EHLO"))
             {
-                await sw.WriteAsyncExt("250 OK", Port);
+                await sw.WriteAsyncExt("250 OK", Logger, Port);
                 continue;
             }
             if (msg.StartsWith("MAIL FROM:"))
@@ -131,26 +121,26 @@ public static class Service
                 #pragma warning disable SYSLIB1045
                 From = Regex.Match(msg, "<(.*)>").Groups[1].Value;
                 #pragma warning restore SYSLIB1045
-                await sw.WriteAsyncExt("250 OK", Port);
+                await sw.WriteAsyncExt("250 OK", Logger, Port);
                 continue;
             }
             if (msg.StartsWith("RCPT TO:"))
             {
-                await sw.WriteAsyncExt("250 OK", Port);
+                await sw.WriteAsyncExt("250 OK", Logger, Port);
                 continue;
             }
             if (msg.StartsWith("DATA"))
             {
-                await sw.WriteAsyncExt("354 Start mail input; end with <CRLF>.<CRLF>", Port);
+                await sw.WriteAsyncExt("354 Start mail input; end with <CRLF>.<CRLF>", Logger, Port);
                 var MIME = await ReadMIME(sr);
                 Logger.LogTrace(Port, "Recieved: {Message}", MIME[..(MIME.Length > 500 ? 500 : MIME.Length)]);
-                await sw.WriteAsyncExt("250 OK", Port);
+                await sw.WriteAsyncExt("250 OK", Logger, Port);
                 await SendMessage(From, MIME, Port);
                 continue;
             }
             if (msg.StartsWith("QUIT"))
             {
-                await sw.WriteAsyncExt($"221 {Environment.MachineName} Service closing transmission channel", Port);
+                await sw.WriteAsyncExt($"221 {Environment.MachineName} Service closing transmission channel", Logger, Port);
                 break;
             }
         }
@@ -158,7 +148,7 @@ public static class Service
         client.Close();
     }
 
-    private static async Task<string> ReadMIME(StreamReader SR)
+    private async Task<string> ReadMIME(StreamReader SR)
     {
         var mime = new List<string?>();
         while (true)
@@ -174,7 +164,7 @@ public static class Service
         return string.Join("\r\n", mime);
     }
 
-    private static async Task SendMessage(string From, string MIME, int Port)
+    private async Task SendMessage(string From, string MIME, int Port)
     {
         Logger.LogInformation(Port, "Sending MIME to MS Graph...");
         var mimeb64bytes = Encoding.UTF8.GetBytes(
@@ -192,8 +182,11 @@ public static class Service
         if (GraphClient != null) await GraphClient.RequestAdapter.SendNoContentAsync(request);
         Logger.LogInformation(Port, "Message sent to MS Graph.");
     }
+}
 
-    private static async Task WriteAsyncExt(this StreamWriter SW, string? Message, int Port)
+public static class Extensions
+{
+    public static async Task WriteAsyncExt(this StreamWriter SW, string? Message, ILogger Logger, int Port)
     {
         Logger.LogTrace(Port, "Sent: {Message}", Message);
         await SW.WriteAsync($"{Message}\r\n");
