@@ -23,7 +23,7 @@ public class Worker(ILogger<Worker> Logger) : BackgroundService
 
     private readonly TcpListener MailListener = new(IPAddress.Any, 25);
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         Logger.LogInformation("Initializing SMTP2Graph...");
 
@@ -57,9 +57,9 @@ public class Worker(ILogger<Worker> Logger) : BackgroundService
             Environment.Exit(0);
         }
 
-        while (true)
+        while (!stoppingToken.IsCancellationRequested)
         {
-            var client = MailListener.AcceptTcpClient();
+            var client = await MailListener.AcceptTcpClientAsync(stoppingToken);
             var port = ((IPEndPoint)client.Client.RemoteEndPoint!).Port;
             Logger.LogInformation(port, "Accepting connection, attempting to process...");
             _ = Task.Run(async () => {
