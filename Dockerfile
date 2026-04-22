@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 COPY . /build
 WORKDIR /build
 RUN dotnet restore
 RUN dotnet publish SMTP2Graph -c Release -o /SMTP2Graph --no-restore
-FROM mcr.microsoft.com/dotnet/runtime:9.0
+FROM mcr.microsoft.com/dotnet/runtime:10.0
 WORKDIR /SMTP2Graph
 COPY --from=build /SMTP2Graph .
 ENV TENANT_ID=""
